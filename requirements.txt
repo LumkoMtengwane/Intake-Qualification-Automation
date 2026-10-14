@@ -1,0 +1,3 @@
+requests
+# Only needed for scripts/google_auth.py (the one-off Google sign-in helper)
+google-auth-oauthlib

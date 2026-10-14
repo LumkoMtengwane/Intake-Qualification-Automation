@@ -1,0 +1,11 @@
+.env
+state.json
+*.log
+logs/
+__pycache__/
+.venv/
+dashboard/
+config.json
+CLAUDE.md
+docs/tracking.md
+docs/licence-and-reuse.md

@@ -1,0 +1,369 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Inquiry Desk | __BUSINESS__</title>
+<style>
+  :root {
+    color-scheme: light;
+    --page: #f9f9f7; --surface: #fcfcfb; --ink: #0b0b0b; --ink2: #52514e; --muted: #898781;
+    --grid: #e1e0d9; --axis: #c3c2b7; --border: rgba(11,11,11,0.10); --wash: rgba(11,11,11,0.04);
+    --s1: #2a78d6; --s2: #eb6834; --s3: #1baf7a; --s7: #4a3aa7;
+    --good: #0ca30c; --warning: #fab219; --critical: #d03b3b;
+    --shadow: 0 1px 2px rgba(11,11,11,0.04), 0 8px 24px rgba(11,11,11,0.06);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:where(:not([data-theme="light"])) {
+      color-scheme: dark;
+      --page: #0d0d0d; --surface: #1a1a19; --ink: #ffffff; --ink2: #c3c2b7; --muted: #898781;
+      --grid: #2c2c2a; --axis: #383835; --border: rgba(255,255,255,0.10); --wash: rgba(255,255,255,0.05);
+      --s1: #3987e5; --s2: #d95926; --s3: #199e70; --s7: #9085e9;
+      --shadow: 0 1px 2px rgba(0,0,0,0.4), 0 8px 24px rgba(0,0,0,0.35);
+    }
+  }
+  :root[data-theme="dark"] {
+    color-scheme: dark;
+    --page: #0d0d0d; --surface: #1a1a19; --ink: #ffffff; --ink2: #c3c2b7; --muted: #898781;
+    --grid: #2c2c2a; --axis: #383835; --border: rgba(255,255,255,0.10); --wash: rgba(255,255,255,0.05);
+    --s1: #3987e5; --s2: #d95926; --s3: #199e70; --s7: #9085e9;
+    --shadow: 0 1px 2px rgba(0,0,0,0.4), 0 8px 24px rgba(0,0,0,0.35);
+  }
+
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    margin: 0; background: var(--page); color: var(--ink);
+    font: 15px/1.5 system-ui, -apple-system, "Segoe UI", sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap { max-width: 1200px; margin: 0 auto; padding: 28px 16px 48px; }
+  .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+  button, select, input { font: inherit; color: inherit; }
+
+  /* Header */
+  header { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; margin-bottom: 24px; flex-wrap: wrap; }
+  .brand { display: flex; align-items: center; gap: 12px; }
+  .logo { width: 36px; height: 36px; border-radius: 10px; background: var(--s1); display: grid; place-items: center; flex: none; }
+  .logo svg { width: 20px; height: 20px; }
+  h1 { font-size: 20px; font-weight: 650; margin: 0; letter-spacing: -0.01em; }
+  .sub { color: var(--ink2); font-size: 13px; margin-top: 2px; }
+  .tools { display: flex; align-items: center; gap: 8px; }
+  .badge { font-size: 12px; font-weight: 600; padding: 4px 10px; border-radius: 999px; border: 1px solid var(--border); color: var(--ink2); background: var(--surface); }
+  .icon-btn { height: 34px; padding: 0 12px; border-radius: 9px; border: 1px solid var(--border); background: var(--surface); cursor: pointer; font-size: 13px; color: var(--ink2); }
+  .icon-btn:hover { background: var(--wash); }
+  :focus-visible { outline: 2px solid var(--s1); outline-offset: 2px; }
+
+  /* Cards */
+  .card { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; box-shadow: var(--shadow); }
+  .kpis { display: grid; grid-template-columns: 1.5fr repeat(4, 1fr); gap: 12px; margin-bottom: 12px; }
+  .kpi { padding: 16px 18px; min-width: 0; }
+  .kpi .label { font-size: 13px; color: var(--ink2); }
+  .kpi .value { font-size: 30px; font-weight: 650; letter-spacing: -0.02em; line-height: 1.15; margin-top: 4px; }
+  .kpi.hero { display: flex; flex-direction: column; justify-content: space-between; }
+  .kpi.hero .value { font-size: 56px; line-height: 1; margin-top: 10px; }
+  .kpi .note { font-size: 12px; color: var(--muted); margin-top: 6px; }
+  .spark { display: flex; align-items: flex-end; gap: 3px; height: 28px; margin-top: 8px; }
+  .spark i { flex: 1; min-width: 3px; max-width: 10px; border-radius: 2px 2px 0 0; background: var(--axis); }
+  .spark i.now { background: var(--s1); }
+
+  .charts { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 12px; }
+  .chart { padding: 16px 18px 12px; min-width: 0; }
+  .chart h2, .tablecard h2 { font-size: 14px; font-weight: 650; margin: 0 0 2px; }
+  .chart .hint { font-size: 12px; color: var(--muted); margin-bottom: 12px; }
+  .hrow { display: grid; grid-template-columns: 132px 1fr; align-items: center; gap: 10px; padding: 5px 0; border-radius: 6px; }
+  .hrow:hover, .hrow:focus-visible { background: var(--wash); }
+  .hl { font-size: 13px; color: var(--ink2); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .bw { display: flex; align-items: center; gap: 8px; min-width: 0; }
+  .bar { flex: 0 0 calc((100% - 36px) * var(--p)); height: 14px; background: var(--s1); border-radius: 0 4px 4px 0; min-width: 3px; }
+  .hv { font-size: 13px; font-weight: 600; }
+  .empty { color: var(--muted); font-size: 13px; padding: 12px 0; }
+
+  /* Table */
+  .tablecard { padding: 16px 0 4px; }
+  .tablecard > h2 { padding: 0 18px; }
+  .filters { display: flex; gap: 8px; flex-wrap: wrap; padding: 12px 18px 14px; align-items: center; }
+  .filters input[type=search], .filters select { height: 36px; border: 1px solid var(--border); border-radius: 9px; background: var(--surface); padding: 0 12px; }
+  .filters input[type=search] { flex: 1 1 220px; min-width: 0; }
+  .check { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; color: var(--ink2); }
+  .count { margin-left: auto; font-size: 12px; color: var(--muted); }
+  .scroll { overflow-x: auto; border-top: 1px solid var(--grid); }
+  table { width: 100%; border-collapse: collapse; font-size: 14px; }
+  th { text-align: left; font-size: 12px; font-weight: 600; color: var(--muted); padding: 10px 14px; border-bottom: 1px solid var(--grid); white-space: nowrap; position: sticky; top: 0; background: var(--surface); }
+  td { padding: 12px 14px; border-bottom: 1px solid var(--grid); vertical-align: middle; }
+  th:first-child, td:first-child { padding-left: 18px; }
+  @media (max-width: 760px) { th:nth-child(3), td:nth-child(3) { padding-left: 18px; } }
+  tbody tr { cursor: pointer; }
+  tbody tr:hover, tbody tr:focus-visible { background: var(--wash); }
+  tbody tr:last-child td { border-bottom: 0; }
+  .ref { font-variant-numeric: tabular-nums; color: var(--ink2); font-size: 13px; white-space: nowrap; }
+  .when { color: var(--ink2); white-space: nowrap; font-size: 13px; }
+  .who { font-weight: 600; }
+  .proj { color: var(--ink2); font-size: 13px; }
+  .chip { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; padding: 3px 10px 3px 8px; border-radius: 999px; border: 1px solid var(--border); background: var(--surface); white-space: nowrap; }
+  .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--muted); flex: none; }
+  .dot[data-k="new"] { background: var(--s1); }
+  .dot[data-k="needs-info"] { background: var(--s2); }
+  .dot[data-k="contacted"] { background: var(--s3); }
+  .dot[data-k="quoted"] { background: var(--s7); }
+  .dot[data-k="won"] { background: var(--good); }
+  .dot[data-k="error"] { background: var(--critical); }
+  .dot[data-k="spam"], .dot[data-k="duplicate"], .dot[data-k="lost"] { background: var(--axis); }
+  .dot[data-k="hot"] { background: var(--critical); }
+  .dot[data-k="warm"] { background: var(--warning); }
+  .dot[data-k="cold"] { background: var(--muted); }
+  .urgent { font-size: 11px; font-weight: 700; color: var(--critical); margin-left: 6px; text-transform: uppercase; letter-spacing: 0.04em; }
+  .none { color: var(--muted); }
+
+  /* Drawer */
+  .overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.35); opacity: 0; pointer-events: none; transition: opacity .18s; z-index: 10; }
+  .overlay.on { opacity: 1; pointer-events: auto; }
+  .drawer { position: fixed; top: 0; right: 0; bottom: 0; width: min(460px, 100%); background: var(--surface); border-left: 1px solid var(--border); box-shadow: var(--shadow); transform: translateX(100%); transition: transform .22s ease; z-index: 11; display: flex; flex-direction: column; }
+  .drawer.on { transform: none; }
+  .dhead { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; padding: 18px 20px 12px; border-bottom: 1px solid var(--grid); }
+  .dhead h3 { margin: 0; font-size: 17px; font-weight: 650; }
+  .dhead .ref { margin-bottom: 4px; display: block; }
+  .dbody { padding: 16px 20px 24px; overflow-y: auto; }
+  .chips { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 16px; }
+  dl { margin: 0; display: grid; grid-template-columns: 96px 1fr; gap: 10px 12px; font-size: 14px; }
+  dt { color: var(--muted); }
+  dd { margin: 0; overflow-wrap: anywhere; }
+  .box { margin-top: 18px; border: 1px solid var(--border); border-radius: 10px; background: var(--wash); padding: 12px 14px; }
+  .box h4 { margin: 0 0 8px; font-size: 13px; font-weight: 650; display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+  .box pre { margin: 0; white-space: pre-wrap; font: inherit; font-size: 14px; color: var(--ink2); }
+  .box .small { font-size: 12px; color: var(--muted); margin-top: 8px; }
+  .copy { height: 28px; padding: 0 10px; border-radius: 8px; border: 1px solid var(--border); background: var(--surface); cursor: pointer; font-size: 12px; }
+  .copy:hover { background: var(--wash); }
+
+  .tip { position: fixed; z-index: 20; pointer-events: none; background: var(--ink); color: var(--surface); font-size: 12px; padding: 6px 10px; border-radius: 8px; opacity: 0; transition: opacity .1s; max-width: 240px; }
+  .tip.on { opacity: 1; }
+  footer { margin-top: 20px; font-size: 12px; color: var(--muted); display: flex; gap: 8px; flex-wrap: wrap; }
+
+  @media (max-width: 1000px) {
+    .kpis { grid-template-columns: 1fr 1fr; }
+    .kpi.hero { grid-column: 1 / -1; }
+    .charts { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 760px) {
+    .hide-sm { display: none; }
+    .kpi .value { font-size: 26px; }
+    .kpi.hero .value { font-size: 48px; }
+    dl { grid-template-columns: 84px 1fr; }
+  }
+  @media (prefers-reduced-motion: reduce) { .drawer, .overlay, .tip { transition: none; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="brand">
+      <div class="logo" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7l9-4 9 4-9 4-9-4z"/><path d="M3 12l9 4 9-4"/><path d="M3 17l9 4 9-4"/></svg>
+      </div>
+      <div>
+        <h1>Inquiry Desk</h1>
+        <div class="sub">__BUSINESS__ · <span id="updated"></span></div>
+      </div>
+    </div>
+    <div class="tools">
+      <span class="badge">Demo data</span>
+      <button class="icon-btn" id="theme" type="button" aria-label="Switch colour theme">Theme: auto</button>
+    </div>
+  </header>
+
+  <section class="kpis" aria-label="Key numbers" id="kpis"></section>
+
+  <section class="charts" aria-label="Charts">
+    <div class="card chart"><h2>By status</h2><div class="hint">All inquiries received</div><div id="c-status"></div></div>
+    <div class="card chart"><h2>By project type</h2><div class="hint">Top project types</div><div id="c-project"></div></div>
+    <div class="card chart"><h2>Open leads by priority</h2><div class="hint">New and Needs info only</div><div id="c-priority"></div></div>
+  </section>
+
+  <section class="card tablecard" aria-label="Inquiries">
+    <h2>Inquiries</h2>
+    <div class="filters">
+      <label class="sr-only" for="q">Search inquiries</label>
+      <input id="q" type="search" placeholder="Search name, project, location…">
+      <label class="sr-only" for="fs">Filter by status</label>
+      <select id="fs"><option value="">All statuses</option></select>
+      <label class="sr-only" for="fp">Filter by priority</label>
+      <select id="fp"><option value="">All priorities</option><option>Hot</option><option>Warm</option><option>Cold</option></select>
+      <label class="check"><input id="fo" type="checkbox"> Open only</label>
+      <span class="count" id="count"></span>
+    </div>
+    <div class="scroll">
+      <table>
+        <thead><tr>
+          <th class="hide-sm">Ref</th><th class="hide-sm">Received</th><th>Status</th><th>Priority</th><th>Customer</th>
+          <th class="hide-sm">Location</th><th class="hide-sm">Timeline</th>
+        </tr></thead>
+        <tbody id="rows"></tbody>
+      </table>
+      <div class="empty" id="none" hidden style="padding:20px 18px">No inquiries match these filters.</div>
+    </div>
+  </section>
+
+  <footer><span id="foot"></span></footer>
+</div>
+
+<div class="overlay" id="overlay"></div>
+<aside class="drawer" id="drawer" role="dialog" aria-modal="true" aria-labelledby="dtitle" aria-hidden="true">
+  <div class="dhead">
+    <div><span class="ref" id="dref"></span><h3 id="dtitle"></h3></div>
+    <button class="icon-btn" id="dclose" type="button" aria-label="Close details">Close</button>
+  </div>
+  <div class="dbody" id="dbody"></div>
+</aside>
+<div class="tip" id="tip" role="tooltip"></div>
+
+<script>
+const D = /*__DATA__*/null;
+const OPEN = ["New", "Needs info"];
+const $ = (s) => document.querySelector(s);
+const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+const slug = (s) => String(s).toLowerCase().replace(/\s+/g, "-");
+const leads = D.leads;
+const fmtDate = (s) => {
+  const d = new Date(String(s).replace(" ", "T"));
+  return isNaN(d) ? s : d.toLocaleString("en-ZA", { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" });
+};
+const chip = (label) => label ? `<span class="chip"><i class="dot" data-k="${slug(label)}"></i>${esc(label)}</span>` : `<span class="none">-</span>`;
+
+/* Header, footer */
+$("#updated").textContent = "Updated " + fmtDate(D.generatedAt);
+$("#foot").textContent = `Generated ${D.generatedAt} · ${leads.length} inquiries · ` +
+  (D.masked ? "Contacts masked · " : "") + "Demo data is fictional";
+
+/* KPIs */
+const openLeads = leads.filter((l) => OPEN.includes(l.status));
+const genDay = new Date(D.generatedAt.replace(" ", "T"));
+const dayKey = (d) => d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0");
+const days = Array.from({ length: 14 }, (_, i) => { const d = new Date(genDay); d.setDate(d.getDate() - (13 - i)); return dayKey(d); });
+const perDay = days.map((k) => leads.filter((l) => String(l.received).slice(0, 10) === k).length);
+const week = perDay.slice(7).reduce((a, b) => a + b, 0);
+const hot = openLeads.filter((l) => l.priority === "Hot").length;
+const needs = leads.filter((l) => l.status === "Needs info").length;
+const stale = openLeads.filter((l) => l.waitingHours != null && l.waitingHours >= D.staleHours).length;
+const maxDay = Math.max(1, ...perDay);
+const spark = perDay.map((n, i) => `<i class="${i === 13 ? "now" : ""}" style="height:${Math.max(8, (n / maxDay) * 100)}%" data-tip="${esc(days[i])}: ${n}"></i>`).join("");
+$("#kpis").innerHTML = `
+  <div class="card kpi hero"><div><div class="label">Open leads</div><div class="value">${openLeads.length}</div></div>
+    <div class="note">New or Needs info, of ${leads.length} inquiries in total</div></div>
+  <div class="card kpi"><div class="label">Received this week</div><div class="value">${week}</div><div class="spark" aria-hidden="true">${spark}</div></div>
+  <div class="card kpi"><div class="label">Hot and open</div><div class="value">${hot}</div><div class="note">Urgent or needed within 4 weeks</div></div>
+  <div class="card kpi"><div class="label">Needs info</div><div class="value">${needs}</div><div class="note">Waiting on the customer</div></div>
+  <div class="card kpi"><div class="label">Waiting over ${D.staleHours}h</div><div class="value">${stale}</div><div class="note">Open and not yet actioned</div></div>`;
+
+/* Charts: single-hue horizontal bars, value at the tip, tooltip on hover */
+function hbars(el, items, total) {
+  if (!items.length) { el.innerHTML = '<div class="empty">Nothing to show yet.</div>'; return; }
+  const max = Math.max(1, ...items.map((i) => i.value));
+  el.innerHTML = items.map((i) => {
+    const pct = total ? Math.round((i.value / total) * 100) : 0;
+    return `<div class="hrow" tabindex="0" data-tip="${esc(i.label)}: ${i.value} (${pct}%)">
+      <span class="hl">${esc(i.label)}</span>
+      <span class="bw"><span class="bar" style="--p:${i.value / max}"></span><span class="hv">${i.value}</span></span></div>`;
+  }).join("");
+}
+const tally = (list, key) => { const m = new Map(); list.forEach((l) => { const k = l[key] || "Not stated"; m.set(k, (m.get(k) || 0) + 1); }); return m; };
+const sorted = (m, n) => [...m.entries()].sort((a, b) => b[1] - a[1]).slice(0, n).map(([label, value]) => ({ label, value }));
+hbars($("#c-status"), sorted(tally(leads, "status"), 8), leads.length);
+const projects = tally(leads.filter((l) => l.project), "project");
+hbars($("#c-project"), sorted(projects, 6), leads.filter((l) => l.project).length);
+const pri = tally(openLeads, "priority");
+hbars($("#c-priority"), ["Hot", "Warm", "Cold"].filter((p) => pri.get(p)).map((p) => ({ label: p, value: pri.get(p) })), openLeads.length);
+
+/* Table */
+const fs = $("#fs");
+[...new Set(leads.map((l) => l.status))].forEach((s) => fs.add(new Option(s, s)));
+function visible() {
+  const q = $("#q").value.trim().toLowerCase();
+  return leads.filter((l) =>
+    (!fs.value || l.status === fs.value) && (!$("#fp").value || l.priority === $("#fp").value) &&
+    (!$("#fo").checked || OPEN.includes(l.status)) &&
+    (!q || [l.ref, l.name, l.project, l.location, l.description, l.status].join(" ").toLowerCase().includes(q)));
+}
+function draw() {
+  const list = visible();
+  $("#rows").innerHTML = list.map((l) => `
+    <tr tabindex="0" data-ref="${esc(l.ref)}">
+      <td class="ref hide-sm">${esc(l.ref)}</td><td class="when hide-sm">${esc(fmtDate(l.received))}</td>
+      <td>${chip(l.status)}</td>
+      <td>${chip(l.priority)}${l.urgent ? '<span class="urgent">Urgent</span>' : ""}</td>
+      <td><div class="who">${esc(l.name) || '<span class="none">Unknown</span>'}</div><div class="proj">${esc(l.project) || "&nbsp;"}</div></td>
+      <td class="hide-sm">${esc(l.location) || '<span class="none">-</span>'}</td>
+      <td class="hide-sm">${esc(l.timeline) || '<span class="none">-</span>'}</td>
+    </tr>`).join("");
+  $("#none").hidden = list.length > 0;
+  $("#count").textContent = `Showing ${list.length} of ${leads.length}`;
+}
+["#q", "#fs", "#fp", "#fo"].forEach((id) => $(id).addEventListener("input", draw));
+draw();
+
+/* Drawer */
+let lastFocus = null;
+function openDrawer(ref) {
+  const l = leads.find((x) => x.ref === ref);
+  if (!l) return;
+  lastFocus = document.activeElement;
+  $("#dref").textContent = l.ref;
+  $("#dtitle").textContent = l.name || "Unknown customer";
+  const row = (k, v) => `<dt>${k}</dt><dd>${v ? esc(v) : '<span class="none">-</span>'}</dd>`;
+  $("#dbody").innerHTML = `
+    <div class="chips">${chip(l.status)}${chip(l.priority)}${l.urgent ? '<span class="chip"><i class="dot" data-k="hot"></i>Urgent</span>' : ""}</div>
+    <dl>${row("Email", l.email)}${row("Phone", l.phone)}${row("Project", l.project)}${row("Location", l.location)}
+      ${row("Timeline", l.timeline)}${row("Received", fmtDate(l.received))}${row("Missing", l.missing)}</dl>
+    <div class="box"><h4>What they asked for</h4><pre>${esc(l.description) || "-"}</pre></div>
+    ${l.draftReply ? `<div class="box"><h4>Suggested reply <button class="copy" id="copy" type="button">Copy</button></h4>
+      <pre id="reply">${esc(l.draftReply)}</pre><div class="small">AI draft. Check it before sending. Nothing is sent automatically.</div></div>` : ""}`;
+  const copy = $("#copy");
+  if (copy) copy.onclick = async () => {
+    try { await navigator.clipboard.writeText(l.draftReply); copy.textContent = "Copied"; } catch (e) { copy.textContent = "Select and copy"; }
+    setTimeout(() => (copy.textContent = "Copy"), 1600);
+  };
+  $("#drawer").classList.add("on"); $("#overlay").classList.add("on");
+  $("#drawer").setAttribute("aria-hidden", "false");
+  $("#dclose").focus();
+}
+function closeDrawer() {
+  $("#drawer").classList.remove("on"); $("#overlay").classList.remove("on");
+  $("#drawer").setAttribute("aria-hidden", "true");
+  if (lastFocus) lastFocus.focus();
+}
+$("#rows").addEventListener("click", (e) => { const tr = e.target.closest("tr"); if (tr) openDrawer(tr.dataset.ref); });
+$("#rows").addEventListener("keydown", (e) => { if (e.key === "Enter" || e.key === " ") { const tr = e.target.closest("tr"); if (tr) { e.preventDefault(); openDrawer(tr.dataset.ref); } } });
+$("#dclose").addEventListener("click", closeDrawer);
+$("#overlay").addEventListener("click", closeDrawer);
+document.addEventListener("keydown", (e) => { if (e.key === "Escape") closeDrawer(); });
+
+/* Tooltip for anything with data-tip */
+const tip = $("#tip");
+function showTip(e) {
+  const t = e.target.closest("[data-tip]");
+  if (!t) { tip.classList.remove("on"); return; }
+  tip.textContent = t.dataset.tip; tip.classList.add("on");
+  const r = e.type === "focusin" ? t.getBoundingClientRect() : null;
+  const x = r ? r.left + r.width / 2 : e.clientX, y = r ? r.top : e.clientY;
+  tip.style.left = Math.min(window.innerWidth - tip.offsetWidth - 8, Math.max(8, x - tip.offsetWidth / 2)) + "px";
+  tip.style.top = Math.max(8, y - tip.offsetHeight - 12) + "px";
+}
+["mousemove", "focusin"].forEach((ev) => document.addEventListener(ev, showTip));
+["mouseleave", "focusout"].forEach((ev) => document.addEventListener(ev, (e) => { if (!e.relatedTarget) tip.classList.remove("on"); }, true));
+
+/* Theme: auto -> light -> dark, remembered when storage is available */
+const modes = ["auto", "light", "dark"];
+let mode = "auto";
+try { mode = localStorage.getItem("theme") || "auto"; } catch (e) {}
+function applyTheme() {
+  if (mode === "auto") document.documentElement.removeAttribute("data-theme"); else document.documentElement.dataset.theme = mode;
+  $("#theme").textContent = "Theme: " + mode;
+}
+$("#theme").addEventListener("click", () => {
+  mode = modes[(modes.indexOf(mode) + 1) % 3];
+  try { localStorage.setItem("theme", mode); } catch (e) {}
+  applyTheme();
+});
+applyTheme();
+</script>
+</body>
+</html>

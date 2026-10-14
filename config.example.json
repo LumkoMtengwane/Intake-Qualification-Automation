@@ -1,0 +1,17 @@
+{
+  "business_name": "Demo Joinery Co (fictional)",
+  "owner_email": "owner@example.com",
+  "notify_also": ["manager@example.com"],
+  "inquiry_address": "YOUR_ADDRESS+inquiries@gmail.com",
+  "gmail_query": "to:YOUR_ADDRESS+inquiries@gmail.com newer_than:30d",
+  "max_emails_per_run": 25,
+  "stale_hours": 48,
+  "digest_day": "Monday",
+  "digest_hour": 8,
+  "sheet_title": "Joinery Inquiries (demo)",
+  "model": "claude-haiku-5-5",
+  "max_output_tokens": 1000,
+  "max_body_chars": 4000,
+  "retries": 3,
+  "backoff_seconds": 2
+}
