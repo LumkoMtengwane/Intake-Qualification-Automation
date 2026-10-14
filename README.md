@@ -2,7 +2,7 @@
 
 Lead capture and qualification automation for carpentry and joinery businesses. It reads customer inquiries from a Gmail inbox, uses Claude to pull out the details, saves them to a colour-coded Google Sheet, and emails the owner a summary with a ready-to-edit draft reply. It also reminds the owner about leads left waiting.
 
-Built as a reusable template: one config file per business, no servers, and a running cost of well under R3 (about $0.15) a month. **All data in this repository is fictional.**
+Built as a reusable template: one config file per business, no servers, and a low running cost. 
 
 ## What it does
 
@@ -40,6 +40,17 @@ The AI only reads text and writes text. Status, missing data and priority are wo
 | Spam | system | Not a real inquiry |
 | Error | system | The email could not be processed |
 | Contacted, Quoted, Won, Lost | owner | Typed into the Status cell as the lead moves on |
+
+### 
+#### Dashbaord:
+<img width="1907" height="987" alt="db1" src="https://github.com/user-attachments/assets/8bd767e7-cfe8-44f5-be91-630264963309" />
+<img width="1912" height="1022" alt="db2" src="https://github.com/user-attachments/assets/7b0d0b06-3b20-469e-bc80-3d486c8dc17b" />
+
+#### Google sheet:
+<img width="1918" height="863" alt="db3" src="https://github.com/user-attachments/assets/8f07289b-6ecd-4f54-a4eb-941db491b870" />
+
+
+
 
 Priority applies to New and Needs info only. **Hot**: urgent, or needed within about 4 weeks. **Warm**: relaxed timeline, or one detail missing. **Cold**: needed in over about 12 weeks, or several details missing.
 
